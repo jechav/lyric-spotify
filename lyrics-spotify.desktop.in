@@ -1,0 +1,8 @@
+[Desktop Entry]
+_Name=Lyrics Spotify
+_Comment=LyricsSpotify application
+Categories=GNOME;Utility;
+Exec=lyrics-spotify
+Icon=lyrics-spotify
+Terminal=false
+Type=Application
