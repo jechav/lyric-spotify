@@ -7,8 +7,8 @@
   <object class="LyricsSpotifyWindow" id="lyrics_spotify_window">
     <property name="can_focus">False</property>
     <property name="title" translatable="yes">Lyrics Spotify</property>
-    <property name="default_width">470</property>
-    <property name="default_height">920</property>
+    <property name="default_width">420</property>
+    <property name="default_height">980</property>
     <property name="icon">../media/lyrics-spotify.svg</property>
     <child>
       <object class="GtkVBox" id="vbox1">

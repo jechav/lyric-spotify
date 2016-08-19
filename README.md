@@ -11,5 +11,3 @@ $ quickly run
 RoadMap:
 
     * Validation spotify running
-
-    * Styling window and text
