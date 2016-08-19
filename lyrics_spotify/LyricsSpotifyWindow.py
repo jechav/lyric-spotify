@@ -38,7 +38,7 @@ class LyricsSpotifyWindow(Window):
 
         def check():
             while ( not t1Stop.is_set() ):
-                print 'repeat'
+                # print 'repeat'
                 metadata = spotify_properties.Get("org.mpris.MediaPlayer2.Player", "Metadata")
                 title = metadata['xesam:title']
                 artist = metadata['xesam:artist'][0]
@@ -49,7 +49,7 @@ class LyricsSpotifyWindow(Window):
                     song = requests.get(url).text
                     builder.widgets['label1'].set_text(song);
                     builder.widgets['label2'].set_text(artist+' - '+title);
-                    print song
+                    # print song
 
                 time.sleep(3);
                 pass
