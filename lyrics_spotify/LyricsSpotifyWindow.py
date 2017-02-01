@@ -29,38 +29,55 @@ class LyricsSpotifyWindow(Window):
         global t1Stop
         t1Stop = threading.Event()
 
-        session_bus = dbus.SessionBus()
-        spotify_bus = session_bus.get_object("org.mpris.MediaPlayer2.spotify",
-                "/org/mpris/MediaPlayer2")
-        spotify_properties = dbus.Interface(spotify_bus,
-                "org.freedesktop.DBus.Properties")
-        temp = {'title':'','artist':''}
+        try:
+            session_bus = dbus.SessionBus()
+            spotify_bus = session_bus.get_object("org.mpris.MediaPlayer2.spotify",
+                    "/org/mpris/MediaPlayer2")
+            spotify_properties = dbus.Interface(spotify_bus,
+                    "org.freedesktop.DBus.Properties")
+            temp = {'title':'','artist':''}
+        except:
+            builder.widgets['label1'].set_text('Error spotify closed')
+            builder.widgets['label2'].set_text('Restart app')
+            return
 
+
+        def parse(val):
+            return val.split(' - ')[0]
+            return val.replace('- Remastered', '')
         def check():
             while ( not t1Stop.is_set() ):
                 # print 'repeat'
-                metadata = spotify_properties.Get("org.mpris.MediaPlayer2.Player", "Metadata")
+                try:
+                    metadata = spotify_properties.Get("org.mpris.MediaPlayer2.Player", "Metadata")
+                except:
+                    builder.widgets['label1'].set_text('Error spotify closed')
+                    builder.widgets['label2'].set_text('Restart app')
+                    return
                 title = metadata['xesam:title']
+                title = parse(title)
                 artist = metadata['xesam:artist'][0]
+
                 if(temp['title'] != title or temp['artist'] != artist):
                     temp['title'] = title
                     temp['artist'] = artist
                     url = "https://makeitpersonal.co/lyrics?artist="+artist+"&title="+title
-                    song = requests.get(url).text
-                    builder.widgets['label1'].set_text(song);
-                    builder.widgets['label2'].set_text(artist+' - '+title);
-                    # print song
+                    try:
+                        song = requests.get(url).text
+                        builder.widgets['label1'].set_text(song);
+                        builder.widgets['label2'].set_text(artist+' - '+title);
+                    except requests.exceptions.RequestException as e:
+                        print('No connection')
 
-                time.sleep(3);
-                pass
-
+                time.sleep(2);
 
         # Start check as a process
         t1 = threading.Thread(target=check)
         t1.start()
 
+
+
     def on_destroy(self, widget, data=None):
         super(LyricsSpotifyWindow, self).on_destroy(widget, data)
         global t1Stop
         t1Stop.set()
-        print 'chao'
